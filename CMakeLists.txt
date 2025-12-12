@@ -53,6 +53,9 @@ add_executable(${PROJECT_NAME}
         src/village/dishes/dish_bread.cpp
         src/village/dishes/dish_bread.hpp
         src/village/dish.hpp
+        src/village/entity_registrator.cpp
+        src/village/entity_registry.cpp
+        src/village/entity_registry.hpp
         src/village/village_builder.cpp
         src/village/village_builder.hpp
         src/village/village_factory.cpp
