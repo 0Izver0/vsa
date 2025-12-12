@@ -24,6 +24,11 @@ int main(int, char**)
         std::cout << rr.first << ": " << rr.second << std::endl;
     }
 
+    auto i = vsa::village::EntityRegistry::get_instance().get_items();
+    for (auto ri : i) {
+        std::cout << ri.first << ": " << ri.second << std::endl;
+    }
+
     app = std::make_unique<vsa::VillageApp>();
 
     std::signal(SIGABRT, signal_handler);

@@ -34,6 +34,12 @@ struct SimulationConfig
         float become_probability = 0.05f;
     };
     std::map<std::string, Resident> residents;
+
+    struct Item
+    {
+        float initial_price = 0.05f;
+    };
+    std::map<std::string, Item> items;
 };
 
 }

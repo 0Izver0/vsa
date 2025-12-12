@@ -26,9 +26,14 @@ std::size_t convert_time_to_days(const std::int32_t value, const std::int32_t un
 ConfigurationWindow::ConfigurationWindow(std::function<void(const sim::SimulationConfig&)> start_simulation)
   : m_start_simulation(std::move(start_simulation))
 {
-    const auto& eri = village::EntityRegistry::get_instance();
-    for (const auto& r : eri.get_residents()) {
+    const auto& err = village::EntityRegistry::get_instance();
+    for (const auto& r : err.get_residents()) {
         m_config.residents[r.first] = sim::SimulationConfig::Resident();
+    }
+
+    const auto& eri = village::EntityRegistry::get_instance();
+    for (const auto& i : eri.get_items()) {
+        m_config.items[i.first] = sim::SimulationConfig::Item();
     }
 }
 
@@ -94,6 +99,15 @@ void ConfigurationWindow::render()
         ImGui::Text("%s", name.c_str());
         ImGui::DragFloat(("Initial percentage##" + name).c_str(), &r.second.initial_percentage, 0, 0, 1);
         ImGui::DragFloat(("Become probability##" + name).c_str(), &r.second.become_probability, 0, 0, 1);
+    }
+
+    ImGui::SeparatorText("Items");
+
+    const auto& ites = village::EntityRegistry::get_instance().get_items();
+    for (auto& i : m_config.items) {
+        const auto& name = ites.at(i.first);
+        ImGui::Text("%s", name.c_str());
+        ImGui::DragFloat(("Initial price##" + name).c_str(), &i.second.initial_price, 0.10f, 0, 100);
     }
 
     ImGui::SeparatorText("Run");
