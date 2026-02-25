@@ -7,7 +7,8 @@
 #include <tools/logger.hpp>
 #include <village_app.hpp>
 
-#include <village/entity_registry.hpp>
+#include <village/entities_registry.hpp>
+
 
 std::unique_ptr<vsa::VillageApp> app;
 
@@ -19,14 +20,10 @@ void signal_handler(int signal)
 
 int main(int, char**)
 {
-    auto r = vsa::village::EntityRegistry::get_instance().get_residents();
-    for (auto rr: r) {
-        std::cout << rr.first << ": " << rr.second << std::endl;
-    }
 
-    auto i = vsa::village::EntityRegistry::get_instance().get_items();
-    for (auto ri : i) {
-        std::cout << ri.first << ": " << ri.second << std::endl;
+    auto r = vsa::village::EntitiesRegistry::get_instance().get_residents();
+    for (auto rr : r) {
+        std::cout << rr.first << ": " << rr.second.name << std::endl;
     }
 
     app = std::make_unique<vsa::VillageApp>();

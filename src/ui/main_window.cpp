@@ -55,9 +55,39 @@ void MainWindow::render_menu()
     }
 }
 
-float get_population(void* data, int idx) {
-    sim::Simulation* simul = reinterpret_cast<sim::Simulation*>(data);
-    return simul->get_data().get_points()[idx].m_population;
+float get_population(void* data, int idx)
+{
+    auto& sim = *reinterpret_cast<sim::Simulation*>(data);
+
+    return sim.get_data().get_points()[idx].m_population;
+}
+
+float get_avg_age(void* data, int idx)
+{
+    auto& sim = *reinterpret_cast<sim::Simulation*>(data);
+
+    return sim.get_data().get_points()[idx].m_avg_age_years;
+}
+
+float get_males_females(void* data, int idx)
+{
+    auto& sim = *reinterpret_cast<sim::Simulation*>(data);
+
+    return 1.0 * sim.get_data().get_points()[idx].m_males / (sim.get_data().get_points()[idx].m_males + sim.get_data().get_points()[idx].m_females);
+}
+
+float get_males(void* data, int idx)
+{
+    auto& sim = *reinterpret_cast<sim::Simulation*>(data);
+
+    return sim.get_data().get_points()[idx].m_males;
+}
+
+float get_females(void* data, int idx)
+{
+    auto& sim = *reinterpret_cast<sim::Simulation*>(data);
+
+    return sim.get_data().get_points()[idx].m_females;
 }
 
 void MainWindow::render()
@@ -118,9 +148,27 @@ void MainWindow::render()
         ImGui::SameLine();
         ImGui::Text("Day: %d", m_current_day);
 
-        std::string overlay_text;
-        overlay_text = "Current Population: " + std::to_string(m_simulation->get_data().get_points()[m_current_day].m_population);
-        ImGui::PlotLines("##PopulationHistogram", &get_population, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, overlay_text.c_str(), 500, 5000, ImVec2(0, 160));
+        if (ImGui::TreeNode("Current day data")) {
+            const sim::SimulationDataPoint& current_p = m_simulation->get_data().get_points()[m_current_day];
+            ImGui::Text("Day %d. (Year: %d)", m_current_day, m_current_day / 365);
+            ImGui::Text("Population: %d", current_p.m_population);
+            ImGui::Text("Average age: %d years", current_p.m_avg_age_years);
+            ImGui::Text("Males/Females: %d/%d", current_p.m_males, current_p.m_females);
+            ImGui::ProgressBar(1.0 * current_p.m_males / (current_p.m_males + current_p.m_females));
+
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("Global data")) {
+            ImGui::PushItemWidth(windowWidth - 140);
+            ImGui::PlotHistogram("Population", &get_population, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
+            ImGui::PlotHistogram("Average age", &get_avg_age, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
+            ImGui::PlotHistogram("Males", &get_males, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
+            ImGui::PlotHistogram("Females", &get_females, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
+            ImGui::PlotLines("Males/Females", &get_males_females, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
+            ImGui::PopItemWidth();
+            ImGui::TreePop();
+        }
 
         if (ImGui::BeginNeoSequencer("Sequencer", &m_current_day, &m_start_day, &m_end_day)) {
             

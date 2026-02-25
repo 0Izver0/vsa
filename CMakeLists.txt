@@ -60,6 +60,16 @@ add_executable(${PROJECT_NAME}
         src/village/village_builder.hpp
         src/village/village_factory.cpp
         src/village/village_factory.hpp
+        src/village/entities_registry.cpp
+        src/village/entities_registry.hpp
+        src/village/entities_registrator.cpp
+        src/village/residents/resident_factory.cpp
+        src/village/residents/resident_factory.hpp
+        src/tools/random_engine.cpp
+        src/tools/random_engine.hpp
+        src/village/resident.cpp
+        src/village/village_config.cpp
+        src/village/village_config.hpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)

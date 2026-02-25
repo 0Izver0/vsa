@@ -1,6 +1,6 @@
 #include "configuration_window.hpp"
 
-#include "village/entity_registry.hpp"
+#include "village/entities_registry.hpp"
 #include "village/village.hpp"
 
 #include <imgui.h>
@@ -17,7 +17,7 @@ std::size_t convert_time_to_days(const std::int32_t value, const std::int32_t un
         case 0: return value;
         case 1: return value * 30;
         case 2: return value * 365;
-        case 3: return value * 365 * 10;
+        case 3: return value * 365 * 100;
         default: return 0;
     }
 }
@@ -26,14 +26,9 @@ std::size_t convert_time_to_days(const std::int32_t value, const std::int32_t un
 ConfigurationWindow::ConfigurationWindow(std::function<void(const sim::SimulationConfig&)> start_simulation)
   : m_start_simulation(std::move(start_simulation))
 {
-    const auto& err = village::EntityRegistry::get_instance();
-    for (const auto& r : err.get_residents()) {
+    const auto& eri = village::EntitiesRegistry::get_instance();
+    for (const auto& r : eri.get_residents()) {
         m_config.residents[r.first] = sim::SimulationConfig::Resident();
-    }
-
-    const auto& eri = village::EntityRegistry::get_instance();
-    for (const auto& i : eri.get_items()) {
-        m_config.items[i.first] = sim::SimulationConfig::Item();
     }
 }
 
@@ -108,6 +103,16 @@ void ConfigurationWindow::render()
         const auto& name = ites.at(i.first);
         ImGui::Text("%s", name.c_str());
         ImGui::DragFloat(("Initial price##" + name).c_str(), &i.second.initial_price, 0.10f, 0, 100);
+    }
+
+    ImGui::SeparatorText("Residents");
+
+    const auto& ress = village::EntitiesRegistry::get_instance().get_residents();
+    for (auto& r : m_config.residents) {
+        const auto& entity = ress.at(r.first);
+        ImGui::Text("%s", entity.name.c_str());
+        ImGui::DragFloat(("Initial percentage##" + entity.name).c_str(), &r.second.initial_percentage, 0, 0, 1);
+        ImGui::DragFloat(("Become probability##" + entity.name).c_str(), &r.second.become_probability, 0, 0, 1);
     }
 
     ImGui::SeparatorText("Run");
