@@ -182,6 +182,12 @@ void MainWindow::render()
         }
 
         if (ImGui::TreeNode("Global data")) {
+            const auto& global = m_simulation->get_data().get_global();
+            ImGui::Text("Average child creating age (years): %d", global.m_avg_first_child_age);
+            ImGui::TreePop();
+        }
+
+        if (ImGui::TreeNode("Global data by time")) {
             ImGui::PushItemWidth(windowWidth - 140);
             ImGui::PlotHistogram("Population", &get_population, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));
             ImGui::PlotHistogram("Average age", &get_avg_age, m_simulation.get(), m_simulation->get_data().get_points().size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0.0 , 160));

@@ -17,14 +17,21 @@ struct SimulationDataPoint
     std::map<std::string, std::size_t> m_count_by_resident;
 };
 
+struct SimulationDataGlobal
+{
+    std::size_t m_avg_first_child_age = 0;
+};
+
 class SimulationData
 {
 public:
-    explicit SimulationData(std::vector<SimulationDataPoint>&& points);
+    explicit SimulationData(std::vector<SimulationDataPoint>&& points, SimulationDataGlobal&& m_global);
 
     [[nodiscard]] const std::vector<SimulationDataPoint>& get_points() const { return m_points; }
+    [[nodiscard]] const SimulationDataGlobal& get_global() const { return m_global; }
 private:
     std::vector<SimulationDataPoint> m_points;
+    SimulationDataGlobal m_global;
 };
 
 }

@@ -24,7 +24,7 @@ Village::Village(std::vector<std::shared_ptr<Resident>> residents):m_residents(r
     }
 }
 
-sim::SimulationDataPoint Village::iterate()
+sim::SimulationDataPoint Village::iterate(sim::SimulationDataGlobal& global)
 {
     //
     // Consume (collect requirements)
@@ -70,6 +70,9 @@ sim::SimulationDataPoint Village::iterate()
         m_residents.push_back(c);
         if (c->is_male()) { m_residents_m.emplace_back(c); }
         else { m_residents_f.emplace_back(c); }
+
+        global.m_avg_first_child_age += p.first->get_age_years() + p.second->get_age_years();
+        global.m_avg_first_child_age /= 3;
     }
 
     // Generate statistics data
