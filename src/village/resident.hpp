@@ -25,20 +25,6 @@ public:
 
     bool iterate();
 
-    void add_mother(std::shared_ptr<Resident> mother) { m_mother = mother; };
-    void add_father(std::shared_ptr<Resident> father) { m_father = father; };
-    void add_spouse(std::shared_ptr<Resident> spouse) { m_spouse = spouse; };
-    void add_child(std::shared_ptr<Resident> child) { m_children.push_back(child); };
-    
-    void remove_mother() { m_mother.reset(); };
-    void remove_father() { m_father.reset(); };
-    void remove_spouse() { m_spouse.reset(); };
-    void remove_child(std::shared_ptr<Resident> child) { std::erase_if(m_children, [child](const std::shared_ptr<Resident>& r) { return r == child; }); }
-
-    void remove_relations();
-
-    bool has_spouse() { return m_spouse != nullptr; };
-
     [[nodiscard]] bool is_male() const { return m_is_male; }
     [[nodiscard]] bool is_dead() const { return m_is_dead; }
     [[nodiscard]] std::size_t get_age_days() const { return m_age_days; }

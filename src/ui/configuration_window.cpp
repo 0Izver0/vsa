@@ -61,8 +61,8 @@ void ConfigurationWindow::render()
     ImGui::DragInt("Initial population", &m_config.population.initial_population, 1, 0, 10000);
     ImGui::DragInt("Initial min age", &m_config.population.initial_min_age, 1, 0, 90);
     ImGui::DragInt("Initial max age", &m_config.population.initial_max_age, 1, 0, 90);
-    ImGui::DragInt("Initial min couple age", &m_config.population.min_couple_age, 1, 0, m_config.population.initial_max_age);
-    ImGui::DragInt("Diference couple age", &m_config.population.diference_couple_age, 1, 0, m_config.population.initial_max_age);
+    ImGui::DragInt("Initial min couple age", &m_config.population.min_couple_creation_age_years, 1, 0, m_config.population.initial_max_age);
+    ImGui::DragInt("Diference couple age", &m_config.population.max_couple_creation_age_diff_years, 1, 0, m_config.population.initial_max_age);
     if (ImGui::DragFloat("Percentage of women", &m_config.population.percentage_of_women, 0, 0, 100)) {
         m_config.population.percentage_of_men = 100 - m_config.population.percentage_of_women;
     }
